@@ -1,0 +1,118 @@
+pip install flask
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Time & Location Sharing</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <h2>Share Your Time and Location</h2>
+    <p><strong>Current Time:</strong> <span id="time"></span></p>
+    <button onclick="getLocation()">Share Location</button>
+    <form method="POST" action="/submit">
+        <input type="hidden" name="latitude" id="latitude">
+        <input type="hidden" name="longitude" id="longitude">
+        <input type="hidden" name="time" id="hiddenTime">
+        <button type="submit">Submit</button>
+    </form>
+    <br>
+    <a href="/view">View All Shared</a>
+
+    <script>
+        setInterval(() => {
+            const now = new Date();
+            const timeString = now.toLocaleTimeString();
+            document.getElementById("time").textContent = timeString;
+            document.getElementById("hiddenTime").value = timeString;
+        }, 1000);
+
+        function getLocation() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(function(position) {
+                    document.getElementById("latitude").value = position.coords.latitude;
+                    document.getElementById("longitude").value = position.coords.longitude;
+                    alert("Location Captured");
+                });
+            } else {
+                alert("Geolocation is not supported.");
+            }
+        }
+    </script>
+</body>
+</html>
+body {
+    font-family: Arial;
+    padding: 20px;
+    background-color: #f0f8ff;
+}
+h2 {
+    color: #333;
+}
+button {
+    padding: 10px;
+    margin: 10px 0;
+}
+from flask import Flask, render_template, request, redirect
+import sqlite3
+from datetime import datetime
+
+app = Flask(__name__)
+
+# Create DB if not exists
+def init_db():
+    conn = sqlite3.connect('database.db')
+    conn.execute('CREATE TABLE IF NOT EXISTS shares (id INTEGER PRIMARY KEY, time TEXT, latitude TEXT, longitude TEXT)')
+    conn.close()
+
+@app.route('/')
+def index():
+    return render_template('index.html')
+
+@app.route('/submit', methods=['POST'])
+def submit():
+    time = request.form['time']
+    lat = request.form['latitude']
+    lon = request.form['longitude']
+    conn = sqlite3.connect('database.db')
+    conn.execute("INSERT INTO shares (time, latitude, longitude) VALUES (?, ?, ?)", (time, lat, lon))
+    conn.commit()
+    conn.close()
+    return redirect('/view')
+
+@app.route('/view')
+def view():
+    conn = sqlite3.connect('database.db')
+    cur = conn.cursor()
+    cur.execute("SELECT * FROM shares ORDER BY id DESC")
+    data = cur.fetchall()
+    conn.close()
+    return render_template('view.html', data=data)
+
+if __name__ == '__main__':
+    init_db()
+    app.run(debug=True)
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Shared Time & Location</title>
+</head>
+<body>
+    <h2>Shared Entries</h2>
+    <table border="1">
+        <tr>
+            <th>Time</th>
+            <th>Latitude</th>
+            <th>Longitude</th>
+        </tr>
+        {% for row in data %}
+        <tr>
+            <td>{{ row[1] }}</td>
+            <td>{{ row[2] }}</td>
+            <td>{{ row[3] }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+    <br><a href="/">Back</a>
+</body>
+</html>
+python app.py

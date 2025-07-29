@@ -1,0 +1,3 @@
+!pip install textblob tweepy
+import nltk
+nltk.download('punkt')
