@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Real-Time Object Detection</title>
+    <style>
+        /* General Styles */
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #121212;
+            color: #f5f5f5;
+        }
+
+        /* Header */
+        header {
+            background: #1f1f1f;
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid #333;
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 24px;
+            color: #00ffcc;
+        }
+
+        /* Container */
+        .container {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-around;
+            padding: 20px;
+        }
+
+        /* Video Section */
+        .video-container {
+            flex: 2;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: #1f1f1f;
+            padding: 15px;
+            border-radius: 12px;
+            box-shadow: 0 0 20px rgba(0, 255, 204, 0.2);
+        }
+
+        .video-container img {
+            border-radius: 12px;
+            border: 2px solid #00ffcc;
+        }
+
+        /* Sidebar for stats */
+        .sidebar {
+            flex: 1;
+            margin-left: 20px;
+            background: #1f1f1f;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 0 20px rgba(0, 255, 204, 0.2);
+        }
+
+        .sidebar h2 {
+            margin-top: 0;
+            font-size: 20px;
+            color: #00ffcc;
+            border-bottom: 1px solid #333;
+            padding-bottom: 10px;
+        }
+
+        .stats {
+            margin-top: 15px;
+        }
+
+        .stat-item {
+            padding: 10px;
+            margin: 8px 0;
+            background: #2b2b2b;
+            border-radius: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .stat-item span {
+            font-size: 16px;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 15px;
+            background: #1f1f1f;
+            border-top: 2px solid #333;
+            margin-top: 20px;
+            font-size: 14px;
+            color: #888;
+        }
+
+        /* Glow Animation */
+        @keyframes glow {
+            0% { text-shadow: 0 0 5px #00ffcc; }
+            50% { text-shadow: 0 0 15px #00ffcc; }
+            100% { text-shadow: 0 0 5px #00ffcc; }
+        }
+        header h1 {
+            animation: glow 2s infinite;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>🚀 Real-Time Object Detection</h1>
+    </header>
+
+    <div class="container">
+        <!-- Video -->
+        <div class="video-container">
+            <img src="{{ url_for('video') }}" width="640" height="480">
+        </div>
+
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <h2>📊 Detection Stats</h2>
+            <div class="stats">
+                <div class="stat-item">
+                    <span>Person</span>
+                    <span>0</span>
+                </div>
+                <div class="stat-item">
+                    <span>Car</span>
+                    <span>0</span>
+                </div>
+                <div class="stat-item">
+                    <span>Dog</span>
+                    <span>0</span>
+                </div>
+                <div class="stat-item">
+                    <span>Others</span>
+                    <span>0</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer">
+        Made with ❤️ using Flask + YOLOv8
+    </div>
+</body>
+</html>
